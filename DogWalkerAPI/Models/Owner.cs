@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DogWalkerAPI.Models
 {
-    class Owner
+    public class Owner
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -12,5 +12,7 @@ namespace DogWalkerAPI.Models
         public string Phone { get; set; }
         public int NeighborhoodId { get; set; }
         public Neighborhood Neighborhood { get; set; }
+
+        public List<Dog> Dogs { get; set; }
     }
 }

@@ -34,9 +34,8 @@ namespace DogWalkerAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(options => options.WithOrigins("Http://LocalHost:3000"));
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DogWalkerAPI.Models
 {
-    class Neighborhood
+    public class Neighborhood
     {
         public int Id { get; set; }
         public string Name { get; set; }

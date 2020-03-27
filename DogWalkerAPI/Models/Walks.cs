@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DogWalkerAPI.Models
 {
-    class Walks
+    public class Walks
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
