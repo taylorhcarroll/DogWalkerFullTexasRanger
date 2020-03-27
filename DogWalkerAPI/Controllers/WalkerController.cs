@@ -85,7 +85,7 @@ namespace DogWalkerAPI.Controllers
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Name = reader.GetString(reader.GetOrdinal("Name")),
                             NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")
-                        };
+                        )};
                     }
                     reader.Close();
                     return Ok(walker);
