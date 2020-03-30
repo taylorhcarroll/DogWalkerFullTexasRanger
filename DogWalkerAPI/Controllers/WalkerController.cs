@@ -31,14 +31,20 @@ namespace DogWalkerAPI.Controllers
         }
         //Get All
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+             [FromQuery] int? neighborhoodId )
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT Id, Name, NeighborhoodId FROM Walker";
+                    cmd.CommandText = "SELECT Id, Name, NeighborhoodId FROM Walker WHERE 1 = 1";
+                    if (neighborhoodId != null)
+                    {
+                        cmd.CommandText += " AND NeighborhoodId LIKE @neighborhoodId";
+                        cmd.Parameters.Add(new SqlParameter("@neighborhoodId", "%" + neighborhoodId + "%"));
+                    }
                     SqlDataReader reader = cmd.ExecuteReader();
                     List<Walker> walkers = new List<Walker>();
 
@@ -61,35 +67,18 @@ namespace DogWalkerAPI.Controllers
 
         //Get by ID
         [HttpGet("{id}", Name = "GetWalker")]
-        public async Task<IActionResult> Get([FromRoute] int id)
+        public async Task<IActionResult> Get(
+            [FromRoute] int id,
+            [FromQuery] string include)
         {
-            using (SqlConnection conn = Connection)
+            if (include != "walks") 
             {
-                conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @"
-                        SELECT
-                        Id, Name, NeighborhoodId
-                        FROM Walker
-                        WHERE Id = @id";
-                    cmd.Parameters.Add(new SqlParameter("@id", id));
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    Walker walker = null;
-
-                    if (reader.Read())
-                    {
-                        walker = new Walker
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Name = reader.GetString(reader.GetOrdinal("Name")),
-                            NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")
-                        )};
-                    }
-                    reader.Close();
-                    return Ok(walker);
-                }
+                var walker = GetWalker(id);
+                return Ok(walker);
+            } else
+            {
+                var walker = GetWalkerWithWalks(id);
+                return Ok(walker);
             }
         }
         //Post
@@ -207,6 +196,70 @@ namespace DogWalkerAPI.Controllers
 
                     SqlDataReader reader = cmd.ExecuteReader();
                     return reader.Read();
+                }
+            }
+        }
+        private Walker GetWalker(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT
+                        Id, Name, NeighborhoodId
+                        FROM Walker
+                        WHERE Id = @id";
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    Walker walker = null;
+
+                    if (reader.Read())
+                    {
+                        walker = new Walker
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")
+                        )
+                        };
+                    }
+                    reader.Close();
+                    return walker;
+                }
+            }
+        }
+        private Walker GetWalkerWithWalks(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT
+                        Id, Name, NeighborhoodId
+                        FROM Walker
+                        WHERE Id = @id";
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    Walker walker = null;
+
+                    if (reader.Read())
+                    {
+                        walker = new Walker
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")
+                        )
+                        };
+                    }
+                    reader.Close();
+                    return walker;
                 }
             }
         }

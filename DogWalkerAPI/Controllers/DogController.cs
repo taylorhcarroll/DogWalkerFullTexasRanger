@@ -31,7 +31,8 @@ namespace DogWalkerAPI.Controllers
         }
         //Get All
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery] int? neighborhoodId)
         {
             using (SqlConnection conn = Connection)
             {
@@ -41,7 +42,13 @@ namespace DogWalkerAPI.Controllers
                     cmd.CommandText = @"Select d.Id, d.Name, d.OwnerId, d.Breed, d.Notes, o.Name AS OwnerName, o.Address, o.NeighborhoodId, o.Phone
                         FROM Dog d
                         Left Join Owner o
-                        On d.OwnerId = o.Id";
+                        On d.OwnerId = o.Id
+                        WHERE 1 = 1";
+                    if (neighborhoodId != null)
+                    {
+                        cmd.CommandText += " AND NeighborhoodId LIKE @neighborhoodId";
+                        cmd.Parameters.Add(new SqlParameter("@neighborhoodId", "%" + neighborhoodId + "%"));
+                    }
                     SqlDataReader reader = cmd.ExecuteReader();
                     List<Dog> dogs = new List<Dog>();
 
