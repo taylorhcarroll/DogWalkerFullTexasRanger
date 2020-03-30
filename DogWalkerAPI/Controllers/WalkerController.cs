@@ -239,24 +239,37 @@ namespace DogWalkerAPI.Controllers
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT
-                        Id, Name, NeighborhoodId
-                        FROM Walker
-                        WHERE Id = @id";
+                        SELECT wr.Id, wr.Name, wr.NeighborhoodId, ws.Id AS WalksId, ws.Date, ws.Duration, ws.WalkerId, ws.DogId
+                        FROM Walker wr
+                        LEFT JOIN Walks ws ON wr.Id = ws.WalkerId
+                        WHERE wr.Id = @id";
                     cmd.Parameters.Add(new SqlParameter("@id", id));
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     Walker walker = null;
 
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        walker = new Walker
+                        //if statement checks to see if walker is null, it does not create a new one each time it loops through while loop
+                        //this keeps it from creating a new walker each time
+                        if (walker == null)
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Name = reader.GetString(reader.GetOrdinal("Name")),
-                            NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")
-                        )
-                        };
+                            walker = new Walker
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                                Walks = new List<Walks>()
+                            };
+                        }
+                            walker.Walks.Add(new Walks()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("WalksId")),
+                                Date = reader.GetDateTime(reader.GetOrdinal("Date")),
+                                Duration = reader.GetInt32(reader.GetOrdinal("Duration")),
+                                WalkerId = reader.GetInt32(reader.GetOrdinal("WalkerId")),
+                                DogId = reader.GetInt32(reader.GetOrdinal("dogId"))
+                            });
                     }
                     reader.Close();
                     return walker;
