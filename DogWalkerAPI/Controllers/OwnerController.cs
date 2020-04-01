@@ -45,32 +45,6 @@ namespace DogWalkerAPI.Controllers
                 var owner = GetOwnersWithNeighborhood(q);
                 return Ok(owner);
             }
-            //using (SqlConnection conn = Connection)
-            //{
-            //    conn.Open();
-            //    using (SqlCommand cmd = conn.CreateCommand())
-            //    {
-            //        cmd.CommandText = "SELECT Id, Name, Address, NeighborhoodId, Phone FROM Owner";
-            //        SqlDataReader reader = cmd.ExecuteReader();
-            //        List<Owner> owners = new List<Owner>();
-
-            //        while (reader.Read())
-            //        {
-            //            Owner owner = new Owner
-            //            {
-            //                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-            //                Name = reader.GetString(reader.GetOrdinal("Name")),
-            //                Address = reader.GetString(reader.GetOrdinal("Address")),
-            //                NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
-            //                Phone = reader.GetString(reader.GetOrdinal("Phone"))
-            //            };
-            //            owners.Add(owner);
-            //        }
-            //        reader.Close();
-
-            //        return Ok(owners);
-            //    }
-            //}
         }
 
         //Get by ID
@@ -89,52 +63,6 @@ namespace DogWalkerAPI.Controllers
                 var owner = GetOwner(id);
                 return Ok(owner);
             }
-            //using (SqlConnection conn = Connection)
-            //{
-            //    conn.Open();
-            //    using (SqlCommand cmd = conn.CreateCommand())
-            //    {
-            //        cmd.CommandText = @"SELECT o.Id, o.Name, o.Address, o.NeighborhoodId, o.Phone, n.Name NeighborhoodName, d.Id DogId ,d.Name DogName, d.Breed, d.Notes
-            //            FROM Owner o
-            //            Left Join  Neighborhood n
-            //            On o.NeighborhoodId = n.Id
-            //            Left Join Dog d
-            //            On o.Id = d.OwnerId
-            //            Where o.Id = @id";
-            //        cmd.Parameters.Add(new SqlParameter("@id", id));
-            //        SqlDataReader reader = cmd.ExecuteReader();
-
-            //        Owner owner = null;
-
-            //        if (reader.Read())
-            //        {
-            //            owner = new Owner
-            //            {
-            //                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-            //                Name = reader.GetString(reader.GetOrdinal("Name")),
-            //                Address = reader.GetString(reader.GetOrdinal("Address")),
-            //                Phone = reader.GetString(reader.GetOrdinal("Phone")),
-            //                NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
-            //                Neighborhood = new Neighborhood()
-            //                {
-            //                    Id = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
-            //                    Name = reader.GetString(reader.GetOrdinal("NeighborhoodName")),
-            //                },
-            //                Dogs = new List<Dog>()
-            //            };
-            //        }
-            //        owner.Dogs.Add(new Dog()
-            //        {
-            //            Id = reader.GetInt32(reader.GetOrdinal("DogId")),
-            //            OwnerId = reader.GetInt32(reader.GetOrdinal("Id")),
-            //            Name = reader.GetString(reader.GetOrdinal("DogName")),
-            //            Breed = reader.GetString(reader.GetOrdinal("Breed")),
-            //            Notes = reader.GetString(reader.GetOrdinal("Notes"))
-            //        });
-            //    reader.Close();
-            //    return Ok(owner);
-            //    }
-            //}
         }
         //Post
         [HttpPost]

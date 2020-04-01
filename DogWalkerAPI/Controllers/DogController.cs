@@ -30,6 +30,11 @@ namespace DogWalkerAPI.Controllers
             }
         }
         //Get All
+        /// <summary>
+        /// This method provides all dogs. 
+        /// </summary>
+        /// <param name="neighborhoodId"> A valid Neighborhood ID </param>
+        /// <returns>It returns all dogs in a neighborhood</returns>
         [HttpGet]
         public async Task<IActionResult> Get(
             [FromQuery] int? neighborhoodId)
